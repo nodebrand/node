@@ -3,7 +3,8 @@
 Y='\033[1;33m'
 N='\033[0m'
 R='\033[1;31m'
-
+G='\033[1;32m'
+P='\033[1;35m'
 
 echo -e "${R}Before you run this .sh file, you must clear the following variables from .bash_profile${N}"
 echo -e "If not, ${R}press Ctrl + C, enter -> sudo nano ~/.bash_profile, clear below variables, and start again.${N}"
