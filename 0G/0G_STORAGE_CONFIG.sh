@@ -6,8 +6,6 @@ R='\033[1;31m'
 G='\033[1;32m'
 P='\033[1;35m'
 
-# Function to update or add a variable in .bash_profile
-# Usage: update_profile_variable VARIABLE_NAME PROMPT [DEFAULT_VALUE]
 update_profile_variable() {
   local VAR_NAME="$1"
   local PROMPT="$2"
@@ -46,10 +44,8 @@ update_profile_variable_with_default() {
 
 }
 
-# Function to update TOML configuration files with ports
 update_toml_files() 
 {
-    # Update .bash_profile with configuration variables
     update_profile_variable "BLOCKCHAIN_RPC_ENDPOINT" 'Enter the exact BLOCKCHAIN_RPC_ENDPOINT(JSON-RPC)' "https://json-rpc.com or http://123.456.789:8545"
     update_profile_variable "PRIVATE_KEY" 'Enter the exact PRIVATE_KEY${R}(DO NOT INCLUDE LEADING 0x)${N}' "691U4BETG97843926TEFU1493RVH395NODEBRAND59371RYE139EI134EBA1B135"
     
@@ -66,7 +62,6 @@ update_toml_files()
 
     source ~/.bash_profile
 
-    # Update config.toml
     sed -i.bak \
       -e "s|^\s*#\?\s*miner_key\s*=.*|miner_key = \"$PRIVATE_KEY\"|" \
       -e "s|^\s*#\?\s*network_dir\s*=.*|network_dir = \"network\"|" \
@@ -86,15 +81,14 @@ update_toml_files()
       -e "s|^\s*#\?\s*mine_contract_address\s*=.*|mine_contract_address = \"$MINE_CONTRACT\"|" \
       -e "s|^\s*#\?\s*log_sync_start_block_number\s*=.*|log_sync_start_block_number = "$ZGS_LOG_SYNC_BLOCK"|" \
       -e "s|^\s*#\?\s*blockchain_rpc_endpoint\s*=.*|blockchain_rpc_endpoint = \"$BLOCKCHAIN_RPC_ENDPOINT\"|" \
-      $ZGS_HOME/run/conffig.toml
+      $ZGS_HOME/run/config.toml
 
-    # Extract values for the final message
-    network_boot_nodes=$(grep -oP 'network_boot_nodes = \[.*?\]' "$ZGS_HOME/run/conffig.toml")
-    NETWORK_ENR_ADDRESS=$(grep -oP 'network_enr_address = "\K[^"]+' $ZGS_HOME/run/conffig.toml)
-    BLOCKCHAIN_RPC_ENDPOINT=$(grep -oP 'blockchain_rpc_endpoint = "\K[^"]+' $ZGS_HOME/run/conffig.toml)
-    LOG_CONTRACT_ADDRESS=$(grep -oP 'log_contract_address = "\K[^"]+' $ZGS_HOME/run/conffig.toml)
-    MINE_CONTRACT_ADDRESS=$(grep -oP 'mine_contract_address = "\K[^"]+' $ZGS_HOME/run/conffig.toml)
-    ZGS_LOG_SYNC_BLOCK=$(grep -oP 'log_sync_start_block_number = \K\d+' $ZGS_HOME/run/conffig.toml)
+    network_boot_nodes=$(grep -oP 'network_boot_nodes = \[.*?\]' "$ZGS_HOME/run/config.toml")
+    NETWORK_ENR_ADDRESS=$(grep -oP 'network_enr_address = "\K[^"]+' $ZGS_HOME/run/config.toml)
+    BLOCKCHAIN_RPC_ENDPOINT=$(grep -oP 'blockchain_rpc_endpoint = "\K[^"]+' $ZGS_HOME/run/config.toml)
+    LOG_CONTRACT_ADDRESS=$(grep -oP 'log_contract_address = "\K[^"]+' $ZGS_HOME/run/config.toml)
+    MINE_CONTRACT_ADDRESS=$(grep -oP 'mine_contract_address = "\K[^"]+' $ZGS_HOME/run/config.toml)
+    ZGS_LOG_SYNC_BLOCK=$(grep -oP 'log_sync_start_block_number = \K\d+' $ZGS_HOME/run/config.toml)
     STORAGE_NODE_PATH=$ZGS_HOME
 
     echo -e "

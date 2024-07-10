@@ -6,8 +6,6 @@ R='\033[1;31m'
 G='\033[1;32m'
 P='\033[1;35m'
 
-# Function to update or add a variable in .bash_profile
-# Usage: update_profile_variable VARIABLE_NAME PROMPT [DEFAULT_VALUE]
 update_profile_variable() {
   local VAR_NAME="$1"
   local PROMPT="$2"
@@ -27,7 +25,6 @@ update_profile_variable() {
 
 }
 
-# Function to update TOML configuration files with ports
 update_toml_files() {
   local OG_HOME="$1"
   local PROXY_APP_PORT="$2"
@@ -39,7 +36,6 @@ update_toml_files() {
   local GRPC_PORT="$8"
   local GRPC_WEB_PORT="$9"
 
-  # Update config.toml
   sed -i.bak \
     -e "s/^indexer *=.*/indexer = \"kv\"/" \
     -e "s/\(proxy_app = \"tcp:\/\/\)\([^:]*\):\([0-9]*\).*/\1\2:$PROXY_APP_PORT\"/" \
@@ -49,7 +45,6 @@ update_toml_files() {
     -e "/\[p2p\]/,/^\[/{s/\(external_address = \"\)\([^:]*\):\([0-9]*\).*/\1${EXTERNAL_IP}:$P2P_PORT\"/; t; s/\(external_address = \"\).*/\1${EXTERNAL_IP}:$P2P_PORT\"/}" \
     $OG_HOME/config/config.toml
 
-  # Update app.toml
   sed -i.bak \
     -e "s/^pruning *=.*/pruning = \"custom\"/" \
     -e "s/^pruning-keep-recent *=.*/pruning-keep-recent = \"100\"/" \
@@ -63,21 +58,18 @@ update_toml_files() {
     $OG_HOME/config/app.toml
 }
 
-# ANSI color codes
 Y='\033[1;33m'  # Yellow
 N='\033[0m'     # Reset color
 R='\033[1;31m'  # Red
 G='\033[1;32m'  # Green
 P='\033[1;35m'  # Purple
 
-# Menu options
 echo -e "${G}1. Update .bash_profile with configuration variables${N}"
 echo -e "${G}2. Update TOML configuration files with ports${N}"
 read -p 'Choose an option (1 or 2): ' OPTION
 
 case $OPTION in
   1)
-    # Update .bash_profile with configuration variables
     update_profile_variable "OG_HOME" 'Enter the exact path to the 0G directory (DO NOT INCLUDE Last "/")' "/root/.0gchain"
     update_profile_variable "MONIKER" "Enter the MONIKER you want to use" "nodebrand_moniker"
     update_profile_variable "WALLET_NAME" "Enter the WALLET NAME you want to use" "wallet"
@@ -128,7 +120,6 @@ echo -e "
     ;;
 
   2)
-    # Source .bash_profile to load environment variables
     source ~/.bash_profile
 
     update_toml_files "$OG_HOME" "$PROXY_APP_PORT" "$RPC_PORT" "$PPROF_PORT" "$P2P_PORT" "$EXTERNAL_IP" "$API_PORT" "$GRPC_PORT" "$GRPC_WEB_PORT"
