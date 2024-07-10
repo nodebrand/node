@@ -27,15 +27,28 @@ if [[ $TEST_TYPE -eq 1 ]]; then
 |                                                                                        |
 +========================================================================================+
   "
-  
-  echo -e "Enter the log_sync_start_block_number ${R}(Enter in decimal)${N}"
-  echo -e "You can check here -> https://nodebrand.xyz/entry/0G-Config"
-  read -p "(Ex: 802): " BLOCK_HEIGHT
-  echo -e "Enter your json-rpc endpoint to search ${R}(Enter in decimal)${N}"
-  read -p "(Ex: https://0G-rpc.nodebrand.xyz, http://123.456.789:8545): " OG_JSON_ENDPOINT
+  IP=$(wget -qO- https://eth0.me)
+  DEFAULT_OG_JSON_ENDPOINT="http://${IP}:8545"
+  DEFAULT_BLOCK_HEIGHT=802
 
+  echo -e "You can check default value here -> https://nodebrand.xyz/entry/0G-Config"
+
+  echo -e "Enter the log_sync_start_block_number (Ex: 802)"
+  echo -e "To use the default value (${G}$DEFAULT_BLOCK_HEIGHT${N}), just press enter "
+  read -p ": " BLOCK_HEIGHT
+  BLOCK_HEIGHT=${BLOCK_HEIGHT:-$DEFAULT_BLOCK_HEIGHT}
   BLOCK_HEIGHT_HEX=$(printf '0x%x' "$BLOCK_HEIGHT")
 
+  echo "Enter your json-rpc endpoint to search"
+  echo "(Ex: https://0G-rpc.nodebrand.xyz, $DEFAULT_OG_JSON_ENDPOINT): "
+  echo "To use the default value ($DEFAULT_OG_JSON_ENDPOINT), just press enter "
+  read -p ": " OG_JSON_ENDPOINT_INPUT
+
+  if [ -n "$OG_JSON_ENDPOINT_INPUT" ]; then
+      OG_JSON_ENDPOINT="$OG_JSON_ENDPOINT_INPUT"
+  else
+      OG_JSON_ENDPOINT="$DEFAULT_OG_JSON_ENDPOINT"
+  fi
 
   result=$(curl -s -X POST $OG_JSON_ENDPOINT -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"eth_getBlockByNumber","params":["'"$BLOCK_HEIGHT_HEX"'",false],"id":1}' | jq)
 
