@@ -68,9 +68,12 @@ elif [[ $TEST_TYPE -eq 2 ]]; then
 |                                                                                        |
 +========================================================================================+
 "
-
-  echo -e "Enter your storage node's URL ${R}(Enter in decimal)${N}"
-  read -p "(Ex: https://0G-ST.nodebrand.xyz, http://123.456.789:5678): " OG_STORAGE_URL
+    DEFAULT_URL="http://127.0.0.1:5678"
+    echo -e "${R}Enter your storage node's URL${N}"
+    echo -e "(Ex: ${Y}https://0G-ST.nodebrand.xyz${N}, ${Y}http://127.0.0.1:5678${N}): "
+    echo -e "To use the default value (${G}$DEFAULT_URL${N}), just press enter: "
+    read -p ":" OG_STORAGE_URL
+    OG_STORAGE_URL=${OG_STORAGE_URL:-$DEFAULT_URL}
 
 
   result=$(curl -s -X POST $OG_STORAGE_URL -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"zgs_getStatus","params":[],"id":1}' | jq)
