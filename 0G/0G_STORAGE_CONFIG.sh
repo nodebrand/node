@@ -52,8 +52,10 @@ update_toml_files()
     EX_IP=$(wget -qO- https://eth0.me)
     if grep -q "^export ENR_ADDRESS=" ~/.bash_profile; then
       sed -i "s|^export ENR_ADDRESS=.*|export ENR_ADDRESS=\"$ENR_ADDRESS\"|" ~/.bash_profile
+      source ~/.bash_profile
     else
       echo "export ENR_ADDRESS=\"$ENR_ADDRESS\"" >> ~/.bash_profile
+      source ~/.bash_profile
     fi
 
     update_profile_variable_with_default "ZGS_HOME" 'Enter the ZGS_HOME' "$HOME/0g-storage-node"
