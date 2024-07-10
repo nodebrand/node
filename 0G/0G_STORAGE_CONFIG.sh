@@ -49,9 +49,9 @@ update_toml_files()
     update_profile_variable "BLOCKCHAIN_RPC_ENDPOINT" 'Enter the exact BLOCKCHAIN_RPC_ENDPOINT(JSON-RPC)' "https://json-rpc.com or http://123.456.789:8545"
     update_profile_variable "PRIVATE_KEY" 'Enter the exact PRIVATE_KEY (DO NOT INCLUDE LEADING 0x)' "691U4BETG97843926TEFU1493RVH395NODEBRAND59371RYE139EI134EBA1B135"
     
-    ENR_ADDRESS=$(wget -qO- https://eth0.me)
+    EX_IP=$(wget -qO- https://eth0.me)
     if grep -q "^export ENR_ADDRESS=" ~/.bash_profile; then
-      sed -i "s|^export ENR_ADDRESS=.*|export $ENR_ADDRESS=\"$ENR_ADDRESS\"|" ~/.bash_profile
+      sed -i "s|^export ENR_ADDRESS=.*|export ENR_ADDRESS=\"$ENR_ADDRESS\"|" ~/.bash_profile
     else
       echo "export ENR_ADDRESS=\"$ENR_ADDRESS\"" >> ~/.bash_profile
     fi
