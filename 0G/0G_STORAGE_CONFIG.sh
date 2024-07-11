@@ -87,15 +87,15 @@ update_toml_files()
       -e "s|^\s*#\?\s*\[sync\].*|\[sync\]|" \
       -e "s|^\s*#\?\s*auto_sync_enabled\s*=.*|auto_sync_enabled = true|" \
       -e "s|^\s*#\?\s*find_peer_timeout\s*=.*|find_peer_timeout = \"10s\"|" \
-      $ZGS_HOME/run/conffig.toml
+      $ZGS_HOME/run/config.toml
 
-    NETWORK_BOOT_NODES=$(grep -oP 'network_boot_nodes = \[\K[^\]]+' "$ZGS_HOME/run/conffig.toml" | awk '{gsub(/,/, ",\n                      ")}1')
+    NETWORK_BOOT_NODES=$(grep -oP 'network_boot_nodes = \[\K[^\]]+' "$ZGS_HOME/run/config.toml" | awk '{gsub(/,/, ",\n                      ")}1')
     NETWORK_BOOT_NODES=$(echo "$NETWORK_BOOT_NODES" | sed '1s/^/                      /')
-    NETWORK_ENR_ADDRESS=$(grep -oP 'network_enr_address = "\K[^"]+' $ZGS_HOME/run/conffig.toml)
-    BLOCKCHAIN_RPC_ENDPOINT=$(grep -oP 'blockchain_rpc_endpoint = "\K[^"]+' $ZGS_HOME/run/conffig.toml)
-    LOG_CONTRACT_ADDRESS=$(grep -oP 'log_contract_address = "\K[^"]+' $ZGS_HOME/run/conffig.toml)
-    MINE_CONTRACT_ADDRESS=$(grep -oP 'mine_contract_address = "\K[^"]+' $ZGS_HOME/run/conffig.toml)
-    ZGS_LOG_SYNC_BLOCK=$(grep -oP 'log_sync_start_block_number = \K\d+' $ZGS_HOME/run/conffig.toml)
+    NETWORK_ENR_ADDRESS=$(grep -oP 'network_enr_address = "\K[^"]+' $ZGS_HOME/run/config.toml)
+    BLOCKCHAIN_RPC_ENDPOINT=$(grep -oP 'blockchain_rpc_endpoint = "\K[^"]+' $ZGS_HOME/run/config.toml)
+    LOG_CONTRACT_ADDRESS=$(grep -oP 'log_contract_address = "\K[^"]+' $ZGS_HOME/run/config.toml)
+    MINE_CONTRACT_ADDRESS=$(grep -oP 'mine_contract_address = "\K[^"]+' $ZGS_HOME/run/config.toml)
+    ZGS_LOG_SYNC_BLOCK=$(grep -oP 'log_sync_start_block_number = \K\d+' $ZGS_HOME/run/config.toml)
     STORAGE_NODE_PATH=$ZGS_HOME
 
     echo -e "
