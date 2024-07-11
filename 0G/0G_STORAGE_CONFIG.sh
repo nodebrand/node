@@ -51,7 +51,7 @@ update_toml_files()
     
     update_profile_variable_with_default "ZGS_HOME" 'Enter the ZGS_HOME' "$HOME/0g-storage-node"
     update_profile_variable_with_default "LOG_CONTRACT_ADDRESS" 'Enter the LOG_CONTRACT_ADDRESS' "0x8873cc79c5b3b5666535C825205C9a128B1D75F1"
-    update_profile_variable_with_default "MINE_CONTRACT" 'Enter the MINE_CONTRACT' "0x85F6722319538A805ED5733c5F4882d96F1C7384"
+    update_profile_variable_with_default "MINE_CONTRACT_ADDRESS" 'Enter the MINE_CONTRACT_ADDRESS' "0x85F6722319538A805ED5733c5F4882d96F1C7384"
     update_profile_variable_with_default "ZGS_LOG_SYNC_BLOCK" 'Enter the ZGS_LOG_SYNC_BLOCK' "802"
     
     ENR_ADDRESS=$(wget -qO- https://eth0.me)
@@ -63,6 +63,12 @@ update_toml_files()
       echo "export ENR_ADDRESS=\"$ENR_ADDRESS\"" >> ~/.bash_profile
     fi
 
+    if grep -q '^export NETWORK_BOOT_NODES=' ~/.bash_profile; then
+      sed -i 's|^export NETWORK_BOOT_NODES=.*|export NETWORK_BOOT_NODES="'"$NETWORK_BOOT_NODES"'"|' ~/.bash_profile
+    else
+      echo "export NETWORK_BOOT_NODES=\"$NETWORK_BOOT_NODES\"" >> ~/.bash_profile
+    fi
+    
     source ~/.bash_profile
 
     sed -i.bak \

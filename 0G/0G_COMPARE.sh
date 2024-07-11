@@ -9,6 +9,8 @@ P='\033[1;35m'
 original_file="$ZGS_HOME/run/config.toml"
 network_boot_nodes=$(grep -oP 'network_boot_nodes = \[.*?\]' "$original_file")
 
+source ~/.bash_profile
+
 echo -e "
 +========================================================================================+
 |            ${Y}_  ______  ___  _______  ___  ___   _  _____${N}    ____      ${P}___  _____${N}        |
@@ -31,17 +33,19 @@ BLOCKCHAIN_RPC_ENDPOINT: $BLOCKCHAIN_RPC_ENDPOINT
 LOG_CONTRACT_ADDRESS: $LOG_CONTRACT_ADDRESS
 MINE_CONTRACT_ADDRESS: $MINE_CONTRACT_ADDRESS
 ZGS_LOG_SYNC_BLOCK: $ZGS_LOG_SYNC_BLOCK
-network_boot_nodes: $NETWORK_BOOT_NODES
-NODEBRAND_0G_STORAGE: $NODEBRAND_0G_STORAGE
+NETWORK_BOOT_NODES:
+$(echo $NETWORK_BOOT_NODES | sed 's/,/,\
+/g')
+
 
 ${G}VARIABLE SETTING IN config.toml${N}
 
-"ZGS_HOME: $ZGS_HOME"
-"ENR_ADDRESS: $(grep -oP 'network_enr_address = "\K[^"]+' $original_file)"
-"BLOCKCHAIN_RPC_ENDPOINT: $(grep -oP 'blockchain_rpc_endpoint = "\K[^"]+' $original_file)"
-"LOG_CONTRACT_ADDRESS: $(grep -oP 'log_contract_address = "\K[^"]+' $original_file)"
-"MINE_CONTRACT_ADDRESS: $(grep -oP 'mine_contract_address = "\K[^"]+' $original_file)"
-"ZGS_LOG_SYNC_BLOCK= $(grep -oP 'log_sync_start_block_number = \K\d+' $original_file)"
-"$network_boot_nodes"
-
+ZGS_HOME: $ZGS_HOME
+ENR_ADDRESS: $(grep -oP 'network_enr_address = "\K[^"]+' $original_file)
+BLOCKCHAIN_RPC_ENDPOINT: $(grep -oP 'blockchain_rpc_endpoint = "\K[^"]+' $original_file)
+LOG_CONTRACT_ADDRESS: $(grep -oP 'log_contract_address = "\K[^"]+' $original_file)
+MINE_CONTRACT_ADDRESS: $(grep -oP 'mine_contract_address = "\K[^"]+' $original_file)
+ZGS_LOG_SYNC_BLOCK: $(grep -oP 'log_sync_start_block_number = \K\d+' $original_file)
+NETWORK_BOOT_NODES:
+$(grep -oP 'network_boot_nodes = \[\K[^\]]+' $original_file | awk '{gsub(/,/, ",\n")}1')
 "
