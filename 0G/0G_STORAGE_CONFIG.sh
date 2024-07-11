@@ -82,6 +82,9 @@ update_toml_files()
       -e "s|^\s*#\?\s*mine_contract_address\s*=.*|mine_contract_address = \"$MINE_CONTRACT\"|" \
       -e "s|^\s*#\?\s*log_sync_start_block_number\s*=.*|log_sync_start_block_number = "$ZGS_LOG_SYNC_BLOCK"|" \
       -e "s|^\s*#\?\s*blockchain_rpc_endpoint\s*=.*|blockchain_rpc_endpoint = \"$BLOCKCHAIN_RPC_ENDPOINT\"|" \
+      -e "s|^\s*#\?\s*\[sync\].*|\[sync\]|" \
+      -e "s|^\s*#\?\s*auto_sync_enabled\s*=.*|auto_sync_enabled = true|" \
+      -e "s|^\s*#\?\s*find_peer_timeout\s*=.*|find_peer_timeout = \"10s\"|" \
       $ZGS_HOME/run/config.toml
 
     network_boot_nodes=$(grep -oP 'network_boot_nodes = \[.*?\]' "$ZGS_HOME/run/config.toml")
