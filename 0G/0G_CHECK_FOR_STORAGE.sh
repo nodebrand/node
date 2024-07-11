@@ -6,8 +6,8 @@ R='\033[1;31m'
 G='\033[1;32m'
 P='\033[1;35m'
 
-echo -e "Please choose the type you want to test"
-echo -e "JSON-RPC -> ${Y}PRESS 1${N}, STORAGE-NODE -> ${Y}PRESS 2${N}: "
+echo -e "==================Please choose the type you want to test=================="
+echo -e "${G}JSON-RPC${N} -> ${Y}PRESS 1${N}, ${G}STORAGE-NODE${N} -> ${Y}PRESS 2${N}: "
 read -p "" TEST_TYPE
 
 if [[ $TEST_TYPE -eq 1 ]]; then
