@@ -54,21 +54,26 @@ update_toml_files()
     update_profile_variable_with_default "MINE_CONTRACT_ADDRESS" 'Enter the MINE_CONTRACT_ADDRESS' "0x85F6722319538A805ED5733c5F4882d96F1C7384"
     update_profile_variable_with_default "ZGS_LOG_SYNC_BLOCK" 'Enter the ZGS_LOG_SYNC_BLOCK' "802"
     
+    CONFIG_FILE="$ZGS_HOME/run/config.toml"
     ENR_ADDRESS=$(wget -qO- https://eth0.me)
-    NETWORK_BOOT_NODES="\"/ip4/54.219.26.22/udp/1234/p2p/16Uiu2HAmTVDGNhkHD98zDnJxQWu3i1FL1aFYeh9wiQTNu4pDCgps\",\"/ip4/52.52.127.117/udp/1234/p2p/16Uiu2HAkzRjxK2gorngB1Xq84qDrT4hSVznYDHj6BkbaE4SGx9oS\",\"/ip4/18.167.69.68/udp/1234/p2p/16Uiu2HAm2k6ua2mGgvZ8rTMV8GhpW71aVzkQWy7D37TTDuLCpgmX\""
+
+    NETWORK_BOOT_NODE1="/ip4/54.219.26.22/udp/1234/p2p/16Uiu2HAmTVDGNhkHD98zDnJxQWu3i1FL1aFYeh9wiQTNu4pDCgps"
+    NETWORK_BOOT_NODE2="/ip4/52.52.127.117/udp/1234/p2p/16Uiu2HAkzRjxK2gorngB1Xq84qDrT4hSVznYDHj6BkbaE4SGx9oS"
+    NETWORK_BOOT_NODE3="/ip4/18.167.69.68/udp/1234/p2p/16Uiu2HAm2k6ua2mGgvZ8rTMV8GhpW71aVzkQWy7D37TTDuLCpgmX"
+    NETWORK_BOOT_NODES="[\"$NETWORK_BOOT_NODE1\",\"$NETWORK_BOOT_NODE2\",\"$NETWORK_BOOT_NODE3\"]"
 
     if grep -q '^export ENR_ADDRESS=' ~/.bash_profile; then
       sed -i 's|^export ENR_ADDRESS=.*|export ENR_ADDRESS="'"$ENR_ADDRESS"'"|' ~/.bash_profile
     else
       echo "export ENR_ADDRESS=\"$ENR_ADDRESS\"" >> ~/.bash_profile
     fi
-
-    if grep -q '^export NETWORK_BOOT_NODES=' ~/.bash_profile; then
-      sed -i 's|^export NETWORK_BOOT_NODES=.*|export NETWORK_BOOT_NODES="'"$NETWORK_BOOT_NODES"'"|' ~/.bash_profile
-    else
-      echo "export NETWORK_BOOT_NODES=\"$NETWORK_BOOT_NODES\"" >> ~/.bash_profile
-    fi
     
+    if grep -q '^export NETWORK_BOOT_NODES=' ~/.bash_profile; then
+      sed -i 's|^export NETWORK_BOOT_NODES=.*|export NETWORK_BOOT_NODES='\"'"$NETWORK_BOOT_NODES"'\"'|' ~/.bash_profile
+    else
+      echo "export NETWORK_BOOT_NODES=\'$NETWORK_BOOT_NODES\'" >> ~/.bash_profile
+    fi
+
     source ~/.bash_profile
 
     sed -i.bak \
@@ -85,7 +90,7 @@ update_toml_files()
       -e "s|^\s*#\?\s*db_dir\s*=.*|db_dir = \"db\"|" \
       -e "s|^\s*#\?\s*log_config_file\s*=.*|log_config_file = \"log_config\"|" \
       -e "s|^\s*#\?\s*log_directory\s*=.*|log_directory = \"log\"|" \
-      -e "s|^\s*#\?\s*network_boot_nodes\s*=.*|network_boot_nodes = [$NETWORK_BOOT_NODES]|" \
+      -e "s|^\s*#\?\s*network_boot_nodes\s*=.*|network_boot_nodes = $NETWORK_BOOT_NODES|" \
       -e "s|^\s*#\?\s*log_contract_address\s*=.*|log_contract_address = \"$LOG_CONTRACT_ADDRESS\"|" \
       -e "s|^\s*#\?\s*mine_contract_address\s*=.*|mine_contract_address = \"$MINE_CONTRACT_ADDRESS\"|" \
       -e "s|^\s*#\?\s*log_sync_start_block_number\s*=.*|log_sync_start_block_number = "$ZGS_LOG_SYNC_BLOCK"|" \
@@ -93,15 +98,15 @@ update_toml_files()
       -e "s|^\s*#\?\s*\[sync\].*|\[sync\]|" \
       -e "s|^\s*#\?\s*auto_sync_enabled\s*=.*|auto_sync_enabled = true|" \
       -e "s|^\s*#\?\s*find_peer_timeout\s*=.*|find_peer_timeout = \"10s\"|" \
-      $ZGS_HOME/run/config.toml
+      $CONFIG_FILE
 
-    NETWORK_BOOT_NODES=$(grep -oP 'network_boot_nodes = \[\K[^\]]+' "$ZGS_HOME/run/config.toml" | awk '{gsub(/,/, ",\n                      ")}1')
+    NETWORK_BOOT_NODES=$(grep -oP 'network_boot_nodes = \[\K[^\]]+' "$CONFIG_FILE" | awk '{gsub(/,/, ",\n                      ")}1')
     NETWORK_BOOT_NODES=$(echo "$NETWORK_BOOT_NODES" | sed '1s/^/                      /')
-    NETWORK_ENR_ADDRESS=$(grep -oP 'network_enr_address = "\K[^"]+' $ZGS_HOME/run/config.toml)
-    BLOCKCHAIN_RPC_ENDPOINT=$(grep -oP 'blockchain_rpc_endpoint = "\K[^"]+' $ZGS_HOME/run/config.toml)
-    LOG_CONTRACT_ADDRESS=$(grep -oP 'log_contract_address = "\K[^"]+' $ZGS_HOME/run/config.toml)
-    MINE_CONTRACT_ADDRESS=$(grep -oP 'mine_contract_address = "\K[^"]+' $ZGS_HOME/run/config.toml)
-    ZGS_LOG_SYNC_BLOCK=$(grep -oP 'log_sync_start_block_number = \K\d+' $ZGS_HOME/run/config.toml)
+    NETWORK_ENR_ADDRESS=$(grep -oP 'network_enr_address = "\K[^"]+' $CONFIG_FILE)
+    BLOCKCHAIN_RPC_ENDPOINT=$(grep -oP 'blockchain_rpc_endpoint = "\K[^"]+' $CONFIG_FILE)
+    LOG_CONTRACT_ADDRESS=$(grep -oP 'log_contract_address = "\K[^"]+' $CONFIG_FILE)
+    MINE_CONTRACT_ADDRESS=$(grep -oP 'mine_contract_address = "\K[^"]+' $CONFIG_FILE)
+    ZGS_LOG_SYNC_BLOCK=$(grep -oP 'log_sync_start_block_number = \K\d+' $CONFIG_FILE)
     STORAGE_NODE_PATH=$ZGS_HOME
 
     echo -e "
