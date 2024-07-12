@@ -3,3 +3,5 @@
 *.bak
 *.json
 
+# Ignore the PREMIUM directory
+PREMIUM/
