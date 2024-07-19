@@ -47,8 +47,12 @@ update_profile_variable_with_default() {
 update_toml_files() 
 {
     update_profile_variable "BLOCKCHAIN_RPC_ENDPOINT" 'Enter the exact BLOCKCHAIN_RPC_ENDPOINT(JSON-RPC)' "https://json-rpc.com or http://123.456.789:8545"
-    update_profile_variable "PRIVATE_KEY" 'Enter the exact PRIVATE_KEY (DO NOT INCLUDE LEADING 0x)' "691U4BETG97843926TEFU1493RVH395NODEBRAND59371RYE139EI134EBA1B135"
-    
+    # update_profile_variable "PRIVATE_KEY" 'Enter the exact PRIVATE_KEY (DO NOT INCLUDE LEADING 0x)' "691U4BETG97843926TEFU1493RVH395NODEBRAND59371RYE139EI134EBA1B135"
+
+    # sed -i.bak \
+    #   -e "s|^\s*#\?\s*miner_key\s*=.*|miner_key = \"$PRIVATE_KEY\"|" \
+    #   $CONFIG_FILE
+
     update_profile_variable_with_default "ZGS_HOME" 'Enter the ZGS_HOME' "$HOME/0g-storage-node"
     update_profile_variable_with_default "LOG_CONTRACT_ADDRESS" 'Enter the LOG_CONTRACT_ADDRESS' "0x8873cc79c5b3b5666535C825205C9a128B1D75F1"
     update_profile_variable_with_default "MINE_CONTRACT_ADDRESS" 'Enter the MINE_CONTRACT_ADDRESS' "0x85F6722319538A805ED5733c5F4882d96F1C7384"
@@ -77,7 +81,6 @@ update_toml_files()
     source ~/.bash_profile
 
     sed -i.bak \
-      -e "s|^\s*#\?\s*miner_key\s*=.*|miner_key = \"$PRIVATE_KEY\"|" \
       -e "s|^\s*#\?\s*network_dir\s*=.*|network_dir = \"network\"|" \
       -e "s|^\s*#\?\s*network_enr_address\s*=.*|network_enr_address = \"$ENR_ADDRESS\"|" \
       -e "s|^\s*#\?\s*network_enr_tcp_port\s*=.*|network_enr_tcp_port = 1234|" \
@@ -108,6 +111,14 @@ update_toml_files()
     MINE_CONTRACT_ADDRESS=$(grep -oP 'mine_contract_address = "\K[^"]+' $CONFIG_FILE)
     ZGS_LOG_SYNC_BLOCK=$(grep -oP 'log_sync_start_block_number = \K\d+' $CONFIG_FILE)
     STORAGE_NODE_PATH=$ZGS_HOME
+
+    echo -e "UPDATE YOUR ${R}PRIVATE_KEY${N} TO config.toml file"
+    read -p "PRIVATE_KEY: " \
+    priv_key && \
+    sed -i \
+      -e "s|^\s*#\?\s*miner_key\s*=.*|miner_key = \"$priv_key\"|" \
+      $CONFIG_FILE
+
 
     echo -e "
     +========================================================================================+
