@@ -57,8 +57,8 @@ update_toml_files()
     update_profile_variable_with_default "LOG_CONTRACT_ADDRESS" 'Enter the LOG_CONTRACT_ADDRESS' "0x8873cc79c5b3b5666535C825205C9a128B1D75F1"
     update_profile_variable_with_default "MINE_CONTRACT_ADDRESS" 'Enter the MINE_CONTRACT_ADDRESS' "0x85F6722319538A805ED5733c5F4882d96F1C7384"
     update_profile_variable_with_default "ZGS_LOG_SYNC_BLOCK" 'Enter the ZGS_LOG_SYNC_BLOCK' "802"
+    update_profile_variable_with_default "CONFIG_FILE" 'Enter the CONFIG_FILE' "$ZGS_HOME/run/config.toml"
     
-    CONFIG_FILE="$ZGS_HOME/run/config.toml"
     ENR_ADDRESS=$(wget -qO- https://eth0.me)
 
     NETWORK_BOOT_NODE1="/ip4/54.219.26.22/udp/1234/p2p/16Uiu2HAmTVDGNhkHD98zDnJxQWu3i1FL1aFYeh9wiQTNu4pDCgps"
